@@ -1,0 +1,74 @@
+//*********************************************
+//    Framework/Mixins/Content/Fonts
+//*********************************************
+
+$fonts: (
+//  (name: sans-serif, type: regular, font: (sans-serif), weight: 400, style: normal)
+) !default;
+
+$standart-fonts: (
+  arial-black: ('Arial Black', 'Helvetica CY', 'Nimbus Sans L', 'sans-serif'),
+  arial: ('Arial', 'Helvetica CY', 'Nimbus Sans L', 'sans-serif'),
+  courier: ('Courier New', 'Nimbus Mono L', 'Monospace'),
+  georgia: ('Georgia', 'Century Schoolbook L', 'serif'),
+  impact: ('Impact', 'Charcoal CY', 'sans-serif'),
+  times-new-roman: ('Times New Roman', 'Times CY', 'Nimbus Roman No9 L', 'serif'),
+  trebuchet: ('Trebuchet MS', 'Helvetica CY', 'sans-serif'),
+  verdana: ('Verdana', 'Geneva CY', 'DejaVu Sans', 'sans-serif'),
+  tahoma: ('Tahoma', 'Geneva CY', 'sans-serif')
+);
+
+$standart-font-types: (
+  (type: regular, weight: normal, style: normal),
+  (type: bold, weight: bold, style: normal),
+  (type: italic, weight: normal, style: italic),
+  (type: regular-italic, weight: normal, style: italic),
+  (type: bold-italic, weight: bold, style: italic)
+);
+
+
+@function fonts-merge-with-standarts (
+  $fonts,
+  $standart-fonts: $standart-fonts,
+  $standart-font-types: $standart-font-types
+) {
+  @if (type-of($fonts) != list) {
+    $fonts: ();
+    @warn("[function 'fonts-merge-with-standarts'] Not a valid list! $fonts: #{$fonts}");
+  }
+
+  $stack: $fonts;
+  $fonts-stack-separator: list-separator($stack);
+  @if (length($stack) == 0) {
+    $fonts-stack-separator: comma;
+  }
+
+  @each $_font, $_stack in $standart-fonts {
+    @each $standart-font-type in $standart-font-types {
+      $stack: append($stack, (
+        name: $_font,
+        font: $_stack,
+        type: map-get($standart-font-type, 'type'),
+        weight: map-get($standart-font-type, 'weight'),
+        style: map-get($standart-font-type, 'style')
+      ), $fonts-stack-separator);
+    }
+  }
+}
+
+$stack: fonts-merge-with-standarts(
+  $fonts: $fonts,
+  $standart-fonts: $standart-fonts,
+  $standart-font-types: $standart-font-types
+);
+
+@mixin font ($name, $type: regular, $stack: $stack) {
+  @each $font in $stack {
+    @if ($name == map-get($font, name) and $type == map-get($font, type)) {
+      font-family: map-get($font, font);
+      font-weight: map-get($font, weight);
+      font-style: map-get($font, style);
+    }
+  }
+}
+

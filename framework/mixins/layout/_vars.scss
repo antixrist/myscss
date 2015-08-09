@@ -1,0 +1,51 @@
+//*********************************************
+//    Framework/Mixins/Layout Variables
+//*********************************************
+//*********************************************
+//    Framework/Mixins/Layout/Auto-columns Grid
+//*********************************************
+$auto-columns-gutter: 0 !default;
+$auto-columns-gutter-style: 'margin' !default;
+$auto-columns-selector-content: '' !default;
+$auto-columns-selector-aside-left: '' !default;
+$auto-columns-selector-aside-right: '' !default;
+
+//*********************************************
+//    Framework/Mixins/Layout/Carcass
+//*********************************************
+$layout-content-container-selector: '.content-container' !default;
+$layout-content-selector: '.content' !default;
+$layout-sidebar-left-selector: '.sidebar-left' !default;
+$layout-sidebar-left-width: 0 !default;
+$layout-sidebar-left-gutter: 0 !default;
+$layout-sidebar-right-selector: '.sidebar-right' !default;
+$layout-sidebar-right-width: 0 !default;
+$layout-sidebar-right-gutter: 0 !default;
+
+$layout-sticky-footer-height: 100px !default;
+$layout-sticky-footer-selector-container: '.layout' !default;
+$layout-sticky-footer-selector-content: '.middle' !default;
+$layout-sticky-footer-selector-footer: '.footer' !default;
+
+$layout-min-width: 960px !default;
+$layout-max-width: 1200 !default;
+$layout-side-space: 50px !default;
+$layout-side-space-type: padding !default; // or "margin"
+
+//*********************************************
+//    Framework/Mixins/Layout/Inline-block Grid
+//*********************************************
+$ib-full-width: false !default;
+$ib-child-selector: '*' !default;
+$ib-child-width: auto !default;
+$ib-font-size: $base-font-size !default;
+
+//*********************************************
+//    Framework/Mixins/Layout/Tile grid
+//*********************************************
+$tile-grid-count-in-row: 0 !default;
+$tile-grid-gutter: 0 !default;
+$tile-grid-gutter-horizontal: $tile-grid-gutter !default;
+$tile-grid-gutter-vertical: $tile-grid-gutter !default;
+$tile-grid-selector: '> *' !default;
+$tile-grid-layout: $tile-grid-count-in-row !default;

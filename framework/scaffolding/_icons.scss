@@ -1,0 +1,55 @@
+@if ($icon-base != '' and $icon-base != false) {
+  #{$icon-base} {
+    @include icon-base();
+  }
+}
+
+@if (type-of($sprite-icons) == map) {
+  @each $type, $options in $sprite-icons {
+    @if (type-of($options) == map and map-has-key($options, 'selector-prefix') and map-has-key($options, 'map')) {
+      $selector-prefix: map-get($options, 'selector-prefix');
+      $map: map-get($options, 'map');
+      $base: false;
+      @if (map-has-key($options, 'base')) {
+        $base: map-get($options, 'base');
+        @if ($base != true and $base != 1) {
+          $base: false;
+        }
+      }
+      $sizes-factor: 1;
+      @if (map-has-key($sizes-factor, 'sizes-factor')) {
+        $sizes-factor: map-get($options, 'sizes-factor');
+        @if (type-of($sizes-factor) != number) {
+          $sizes-factor: 1;
+        }
+      }
+
+      $map-data: get-sprite-map-info($map: $map, $names: true);
+      @if (map-has-key($map-data, 'names')) {
+        $names: map-get($map-data, 'names');
+        @each $icon-name in $names {
+          $icon-data: get-sprite-icon-info($map: $map, $name: $icon-name, $sizes: true, $sizes-factor: $sizes-factor, $offset: true);
+
+          #{$selector-prefix}#{$icon-name} {
+            $icon-sizes: (width: map-get($icon-data, 'width'), height: map-get($icon-data, 'height'));
+            @if ($base) {
+              @include icon-base();
+            }
+
+            @include bg-image(
+              $image: map-get($map-data, 'path'),
+              $offset: map-get($icon-data, 'offset'),
+              $repeat: no-repeat,
+              $color: transparent,
+              $inline: false
+            );
+            @include fit-to-image-sizes($icon-sizes);
+            @include bg-size($icon-sizes);
+          }
+
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,123 @@
+//*********************************************
+//    Framework/Mixins/Content/Images
+//*********************************************
+
+@function sizes-factor ($sizes, $factor: 1) {
+  $result: ();
+  @if (type-of($factor) != number) {
+    @warn('[sizes-factor] Invalid number!  Set it to "1". $factor: "#{$factor}"');
+    $factor: 1;
+  } @elseif ($factor == 0) {
+    @warn('[sizes-factor] $factor cann\'t be zero! Set it to "1"');
+    $factor: 1;
+  }
+
+  @if (type-of($sizes) == map) {
+    @if (map-has-key($sizes, 'width')) {
+      $width: map-get($sizes, 'width');
+      @if (type-of($width) == number) {
+        $width: $width / $factor;
+      }
+      $result: map-append($result, (width: $width));
+    } @else {
+      @warn('[sizes-factor] Not exists "width" in sizes map!');
+      $result: $sizes;
+    }
+    @if (map-has-key($sizes, 'height')) {
+      $height: map-get($sizes, 'height');
+      @if (type-of($height) == number) {
+        $height: $height / $factor;
+      }
+      $result: map-append($result, (height: $height));
+    } @else {
+      @warn('[sizes-factor] Not exists "height" in sizes map!');
+      $result: $sizes;
+    }
+  } @else {
+    @if (inspect($sizes) == '') {
+      @warn('[sizes-factor] $sizes cann\'t be empty!');
+      $result: $sizes;
+    } @else {
+      @if (type-of($sizes) == string) {
+        $sizes: to-list($sizes);
+      }
+      @if (type-of($sizes) != list) {
+        $result: $sizes;
+        @warn('[sizes-factor] Not a list! $sizes: "#{inspect($sizes)}"');
+      } @else {
+        $listLength: length($sizes);
+        @if ($listLength < 1 or $listLength > 2) {
+          @warn('[sizes-factor] Invalid length of $sizes! $sizes: "#{inspect($sizes)}"');
+          $result: $sizes;
+        } @else {
+          $width: nth($sizes, 1);
+          @if ($width != null) {
+            @if (type-of($width) == number) {
+              $width: $width / $factor;
+            }
+            $result: append($result, $width);
+          }
+
+          $height: nth($sizes, 2);
+          @if ($height != null) {
+            @if (type-of($height) == number) {
+              $height: $height / $factor;
+            }
+            $result: append($result, $height);
+          }
+        }
+      }
+    }
+  }
+
+  @return $result;
+}
+
+@function image-sizes ($image, $factor: 1) {
+  @return sizes-factor((
+    width: image-width($image),
+    height: image-height($image)
+  ), $factor);
+}
+
+$background-size-behavior: '/js/vendor/backgroundsize.min.htc' !default;
+@mixin bg-size ($sizes, $behavior: $background-size-behavior) {
+  @if (type-of($sizes) == map) {
+    @if (map-has-key($sizes, 'width') and map-has-key($sizes, 'height')) {
+      $sizes: map-get($sizes, 'width') map-get($sizes, 'height');
+    }
+  } @else {
+    // здесь вроде ничего больше проверять не нужно
+  }
+
+  @include background-size($sizes);
+
+  @if (type-of($behavior) == string and $behavior != '') {
+    .lt-ie9 & {
+      -ms-behavior: url($behavior);
+    }
+  }
+}
+
+@mixin fit-to-image-sizes ($image: '', $factor: 1, $sizes: image-sizes($image, $factor)) {
+  @if (type-of($sizes) != map and map-has-key($sizes, 'width') and map-has-key($sizes, 'height')) {
+    width: map-get($sizes, 'width');
+    height: map-get($sizes, 'height');
+  }
+}
+
+@mixin bg-image (
+  $image,
+  $offset: center center,
+  $repeat: no-repeat,
+  $color: transparent,
+  $inline: true
+) {
+  @if ($image != '') {
+    @if ($inline == 1 or $inline == true) {
+      background: inline-image($image) $repeat $offset $color;
+    } @else {
+      background: image-url($image) $repeat $offset $color;
+    }
+  }
+}

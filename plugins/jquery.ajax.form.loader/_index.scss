@@ -1,0 +1,92 @@
+@import 'vars';
+
+@function afl-file (
+  $file,
+  $dir: $afl-dir
+) {
+  @return join-pathes($dir, $file);
+}
+
+@mixin afl-loader ($image, $hidpi: false) {
+  @if ($image != '') {
+    $image: afl-file($image);
+
+    $loaderWidth: image-height($image);
+    $loaderHeight: image-width($image);
+
+    @if (type-of($loaderWidth) != 'number' or type-of($loaderHeight) != 'number') {
+      @debug('[ajax.form.loader] Loader not found: "#{$image}"');
+    } @else {
+      @if ($hidpi == true or $hidpi == 1) {
+        $loaderWidth: $loaderWidth /2;
+        $loaderHeight: $loaderHeight /2;
+      }
+
+      width: $loaderWidth;
+      height: $loaderHeight;
+      margin-top: -($loaderHeight /2);
+      margin-left: (-$loaderWidth /2);
+      background: inline-image($image) no-repeat center center transparent;
+      @include bg-size(100% 100%);
+    }
+  }
+}
+
+@mixin afl-form (
+  $loading-selector: $afl-loading-selector,
+  $loader: $afl-loader-file,
+  $loader-hidpi: $afl-loader-file-hidpi,
+  $loading-background: $afl-loading-background
+) {
+  $loading-selector: unquote($loading-selector);
+
+  position: relative;
+  z-index: 1;
+
+  &:after {
+    content: '';
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    z-index: 5;
+    background: $loading-background;
+
+    @if (type-of($loading-background) == color) {
+      .lt-ie9 & {
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#65FFFFFF,endColorstr=#65FFFFFF);
+        zoom: 1;
+      }
+    }
+  }
+
+  &:before {
+    content: '';
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    z-index: 10;
+
+    @include afl-loader($afl-loader-file);
+
+    @if mixin-exists(breakpoint) {
+      @include breakpoint(min-resolution 1.5dppx) {
+
+        @include afl-loader($afl-loader-file-hidpi, 1);
+      }
+    }
+  }
+  &:before, &:after {
+    display: none;
+  }
+  &#{$loading-selector}:before,
+  &#{$loading-selector}:after {
+    display: block;
+  }
+}
+
+form.afl {
+  @include afl-form();
+}
+

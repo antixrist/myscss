@@ -1,0 +1,200 @@
+//*********************************************
+//    Framework/Mixins/Content/Icons
+//*********************************************
+
+// not a "!default"!
+$sprite-maps-storage: ();
+$compass-sprite-map-type: unquote('compass::sassextensions::sprites::spritemap');
+
+
+@function get-sprite-unique-key-from-path($path) {
+  $name: implode('', explode('/', $path));
+  @return $name;
+}
+
+@function get-sprite-map ($input) {
+  $result: null;
+  @if (type-of($input) == $compass-sprite-map-type) {
+    $result: $input;
+  } @else {
+    $path: $input;
+    @if (type-of($path) != string) {
+      @warn('[get-sprite-map] Not a string! $input: "#{$path}"');
+      $path: inspect($input);
+    }
+    $path: unquote($path);
+    @if ($path == '') {
+      @warn('[get-sprite-map] $input is empty!');
+      @return $result;
+    }
+
+    $map-key: get-sprite-unique-key-from-path($path);
+
+    @if (map-has-key($sprite-maps-storage, $map-key)) {
+      $result: map-get($sprite-maps-storage, $map-key);
+    } @else {
+      $map: sprite-map($path);
+      $sprite-maps-storage: map-merge($sprite-maps-storage, (#{$map-key}: $map)) !global;
+      $result: $map;
+    }
+  }
+
+  @if ($result == null) {
+    @warn('[get-sprite-map] Not exists map!');
+  }
+
+  @return $result;
+}
+
+@function icon-exists-in-sprite-map (
+  $map, // #{$compass-sprite-map-type} or path string
+  $name
+) {
+  $result: false;
+  $sprite-map: get-sprite-map($map);
+  @if ($sprite-map != null) {
+    @if (type-of($name) != string) {
+      @warn('[icon-exists-in-sprite-map] Not a string! $name: "#{$name}"');
+      $name: inspect($name);
+    }
+    $name: unquote($name);
+    @if ($name == '') {
+      @warn('[icon-exists-in-sprite-map] $input is empty!');
+    } @else {
+      @if (index(sprite-names($sprite-map), $name) != null) {
+        $result: true;
+      }
+    }
+  }
+
+  @return $result;
+}
+
+@function get-sprite-icon-offset (
+  $map, // #{$compass-sprite-map-type} or path string
+  $name
+) {
+  // default. it's will is empty background
+  $result: 100% 100%;
+
+  $sprite-map: get-sprite-map($map);
+  @if ($sprite-map != null and icon-exists-in-sprite-map($sprite-map, $name)) {
+    $result: sprite-position($sprite-map, $name);
+  }
+
+  @return $result;
+}
+
+@function get-sprite-icon-file (
+  $map, // #{$compass-sprite-map-type} or path string
+  $name
+) {
+  // default. it's will is empty background
+  $result: '';
+
+  $sprite-map: get-sprite-map($map);
+  @if ($sprite-map != null and icon-exists-in-sprite-map($sprite-map, $name)) {
+    $result: sprite-file($sprite-map, $name);
+  }
+
+  @return $result;
+}
+
+@function get-sprite-icon-size (
+  $map, // #{$compass-sprite-map-type} or path string
+  $name,
+  $factor: 1
+) {
+  // default. it's will is empty background
+  $result: (width: 0, height: 0);
+
+  $sprite-map: get-sprite-map($map);
+  @if ($sprite-map != null and icon-exists-in-sprite-map($sprite-map, $name)) {
+    $file: get-sprite-icon-file($sprite-map, $name);
+    $result: image-sizes($file, $factor: $factor);
+  }
+
+  @return $result;
+}
+
+@function get-sprite-map-info (
+  $map, // #{$compass-sprite-map-type} or path string
+  $name: false,
+  $names: false,
+  $url: false,
+  $path: false,
+  $sizes: false,
+  $sizes-factor: 1
+) {
+  $result: ();
+
+  $sprite-map: get-sprite-map($map);
+  @if ($sprite-map != null) {
+    @if (is-true($name)) {
+      $result: map-merge($result, (name: sprite-map-name($sprite-map)));
+    }
+
+    @if (is-true($names)) {
+      $result: map-merge($result, (names: sprite-names($sprite-map)));
+    }
+
+    @if (is-true($url)) {
+      $result: map-merge($result, (url: sprite-url($sprite-map)));
+    }
+
+    @if (is-true($path)) {
+      $result: map-merge($result, (path: sprite-path($sprite-map)));
+    }
+
+    @if (is-true($sizes)) {
+      $result: map-merge($result, sizes-factor((
+        width: sprite-width($sprite-map),
+        height: sprite-height($sprite-map)
+      ), $sizes-factor));
+    }
+  }
+
+  @return $result;
+}
+
+@function get-sprite-icon-info (
+  $map, // #{$compass-sprite-map-type} or path string
+  $name,
+  $file: false,
+  $sizes: false,
+  $sizes-factor: 1,
+  $offset: false
+) {
+  $result: ();
+
+  $name: unquote($name);
+  $sprite-map: get-sprite-map($map);
+  @if ($sprite-map != null) {
+
+    @if (is-true($file)) {
+      $result: map-merge($result, (file: get-sprite-icon-file($sprite-map, $name)));
+    }
+
+    @if (is-true($sizes)) {
+      $result: map-merge($result, get-sprite-icon-size($sprite-map, $name, $sizes-factor));
+    }
+
+    @if (is-true($offset)) {
+      $result: map-merge($result, (position: get-sprite-icon-offset($sprite-map, $name)));
+    }
+
+  }
+
+  @return $result;
+}
+
+
+@mixin icon-base () {
+  display: inline-block;
+  vertical-align: middle;
+  border: none;
+  text-decoration: none;
+  outline: none;
+  background-repeat: no-repeat;
+}
+

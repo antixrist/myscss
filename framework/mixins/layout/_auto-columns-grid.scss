@@ -1,0 +1,47 @@
+//*********************************************
+//    Framework/Mixins/Layout/Auto-columns Grid
+//*********************************************
+
+@mixin auto-colums-aside ($position, $gutter: 0, $gutter-style: 'margin') {
+  $direction: unquote($position);
+  float: $direction;
+  #{$gutter-style}-#{opposite-position($direction)}: $gutter;
+}
+
+@mixin auto-colums-content () {
+  overflow: hidden;
+  display: block;
+}
+
+$auto-columns-gutter: 0 !default;
+$auto-columns-gutter-style: 'margin' !default;
+$auto-columns-selector-content: '' !default;
+$auto-columns-selector-aside-left: '' !default;
+$auto-columns-selector-aside-right: '' !default;
+@mixin auto-colums (
+  $gutter: $auto-columns-gutter,
+  $gutter-style: $auto-columns-gutter-style,
+  $selector-content: $auto-columns-selector-content,
+  $selector-aside-left: $auto-columns-selector-aside-left,
+  $selector-aside-right: $auto-columns-selector-aside-right
+) {
+  @include clearfix;
+
+  @if ($selector-content != '') {
+    & > {$selector-content} {
+      @include auto-colums-content();
+    }
+  }
+
+  @if ($selector-aside-left != '') {
+    & > {$selector-aside-left} {
+      @include auto-colums-aside($position: left, $gutter: $gutter, $gutter-style: $gutter-style);
+    }
+  }
+  @if ($selector-aside-right != '') {
+    & > {$selector-aside-right} {
+      @include auto-colums-aside($position: right, $gutter: $gutter, $gutter-style: $gutter-style);
+    }
+  }
+}
+

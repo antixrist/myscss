@@ -1,0 +1,206 @@
+//*********************************************
+//    Framework/Mixins/Content/Forms/Buttons
+//*********************************************
+@mixin btn () {
+  display: inline-block;
+  margin-bottom: 0;
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border-style: solid;
+  border-color: transparent;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  outline: 0 none;
+  @include user-select(none);
+  @include selection($color: transparent);
+
+//  #{$actived},
+  #{$focused} {
+    @include focus();
+  }
+
+  #{$hovered},
+  #{$focused} {
+    text-decoration: none;
+  }
+
+  #{$actived} {
+    outline: 0;
+    background-image: none;
+  }
+
+  #{$disabled} {
+    cursor: default;
+    opacity: .65;
+    box-shadow: none;
+    pointer-events: none;
+  }
+
+  @include e(inner) {
+    vertical-align: middle;
+  }
+}
+
+$btn-height: auto !default;
+$btn-font-size: $base-font-size !default;
+$btn-line-height: $base-line-height !default;
+$btn-border-width: 1px !default;
+$btn-padding-vertical: 10px !default;
+$btn-padding-horizontal: 65px !default;
+$btn-lines: 1 !default;
+$btn-active-offset: 1px !default;
+$btn-active-offset-type: inner !default; // inner|outer|none/false
+@mixin btn-size (
+  $height: $btn-height,
+  $font-size: $btn-font-size,
+  $line-height: $btn-line-height,
+  $border-width: $btn-border-width,
+  $padding-vertical: $btn-padding-vertical,
+  $padding-horizontal: $btn-padding-horizontal,
+  $lines: $btn-lines,
+  $enlarge-by-ratio: false,
+  $reduce-by-ratio: false,
+  $active-offset: $btn-active-offset,
+  $active-offset-type: $btn-active-offset-type
+) {
+
+  $vertical-sizes: control-get-sizes(
+    $height: $height,
+    $font-size: $font-size,
+    $line-height: $line-height,
+    $border-width: $border-width,
+    $padding-vertical: $padding-vertical,
+    $padding-horizontal: $padding-horizontal,
+    $lines: $lines,
+    $enlarge-by-ratio: false,
+    $reduce-by-ratio: false
+  );
+
+  @include control-sizes(
+    $height: map-get($vertical-sizes, 'height'),
+    $font-size: map-get($vertical-sizes, 'font-size'),
+    $line-height: map-get($vertical-sizes, 'line-height'),
+    $border-width: map-get($vertical-sizes, 'border-width'),
+    $padding-vertical: map-get($vertical-sizes, 'padding-vertical'),
+    $padding-horizontal: map-get($vertical-sizes, 'padding-horizontal')
+  );
+
+  #{$actived} {
+    $active-type: unquote($active-offset-type);
+
+    @if ($active-type == inner) {
+      $padding-vertical: map-get($vertical-sizes, 'padding-vertical');
+      padding-top: $padding-vertical + $active-offset;
+      padding-bottom: $padding-vertical - $active-offset;
+    } @elseif ($active-type == outer) {
+      position: relative;
+      top: $active-offset;
+    }
+  }
+}
+
+@mixin btn-block {
+  display: block;
+  width: 100%;
+  white-space: normal;
+}
+
+$btn-color-normal: #fff !default;
+$btn-color-hover: $btn-color-normal !default;
+$btn-color-focus: $btn-color-normal !default;
+$btn-color-active: $btn-color-normal !default;
+$btn-color-bg-normal: (#ffd15c, #ffd15c, #fdc636, #fdc636, #fcb809, #fe6b03) !default;
+$btn-color-bg-hover: (#feea5c, #fdd936, #fdca09, #fdca09, #fd8905, #ffba04) !default;
+$btn-color-bg-focus: $btn-color-bg-hover !default;
+$btn-color-bg-active: (#fe9457, #fe9457, #fe7f31, #fe7f31, #fe6403, #fcb008) !default;
+$btn-color-border-normal: transparent !default;
+$btn-color-border-hover: transparent !default;
+$btn-color-border-focus: transparent !default;
+$btn-color-border-active: transparent !default;
+$btn-border-radius: 4px !default;
+@mixin btn-variant(
+  $color-normal: $btn-color-normal,
+  $color-hover: $btn-color-hover,
+  $color-focus: $btn-color-focus,
+  $color-active: $btn-color-active,
+  $color-bg-normal: $btn-color-bg-normal,
+  $color-bg-hover: $btn-color-bg-hover,
+  $color-bg-focus: $btn-color-bg-focus,
+  $color-bg-active: $btn-color-bg-active,
+  $color-border-normal: $btn-color-border-normal,
+  $color-border-hover: $btn-color-border-hover,
+  $color-border-focus: $btn-color-border-focus,
+  $color-border-active: $btn-color-border-active,
+  $border-radius: $btn-border-radius
+) {
+  color: $color-normal !important;
+  border-color: $color-border-normal;
+  border-radius: $border-radius;
+
+  @include control-background($color: $color-bg-normal, $direction: to bottom);
+
+  #{$hovered} {
+    color: $color-hover !important;
+    border-color: $color-border-hover;
+
+    @include control-background($color: $color-bg-hover, $direction: to bottom);
+  }
+
+  #{$focused} {
+    color: $color-focus !important;
+    border-color: $color-border-focus;
+
+    @include control-background($color: $color-bg-focus, $direction: to bottom);
+  }
+
+  #{$actived} {
+    color: $color-active !important;
+    border-color: $color-border-active;
+
+    @if ($color-bg-hover == $color-bg-active) {
+      // reverse
+      @include control-background($color: $color-bg-active, $direction: to top);
+    } @else {
+      @include control-background($color: $color-bg-active, $direction: to bottom);
+    }
+  }
+
+  #{$disabled} {
+    &,
+    #{$hovered},
+    #{$focused},
+    #{$actived} {
+      color: $color-normal !important;
+      border-color: $color-border-normal;
+
+      @include control-background($color: $color-bg-normal, $direction: to bottom);
+    }
+  }
+}
+
+@mixin btn-file {
+  position: relative;
+
+  input[type=file] {
+    cursor: pointer;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+

@@ -1,0 +1,33 @@
+$base-font-size: 14px !default;
+$base-line-height: 1.4em !default;
+$base-color: #363636 !default;
+$base-font: arial !default;
+
+$selection-color: #b3d4fc !default;
+$selection-text-shadow: none !default;
+
+
+$fonts: (
+  //  (name: sans-serif, type: regular, font: (sans-serif), weight: 400, style: normal)
+) !default;
+
+$validated-error-color: #ff0000 !default;
+$validated-success-color: #3a9814 !default;
+
+$background-size-behavior: '/js/vendor/backgroundsize.min.htc' !default;
+
+//*********************************************
+//    States
+//*********************************************
+$hovered: unquote('&:hover, &.hover') !default;
+$focused: unquote('&:focus, &.focus') !default;
+$actived: unquote('&:active, &.active') !default;
+$disabled: unquote('&.disabled, &[disabled], fieldset[disabled] &') !default;
+
+$validated-error: unquote('.error > &, &.error') !default;
+$validated-success: unquote('.success > &, &.success') !default;
+
+$required: unquote('.required > &') !default;
+$text-inputs: unquote('input[type=text], input[type=email], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=url], input[type=color], input[type=date], input[type=datetime], input[type=datetime-local], input[type=month], input[type=time], input[type=week]') !default;
+$inputs: unquote('#{$text-inputs}, textarea');
+

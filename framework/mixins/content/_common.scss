@@ -1,0 +1,45 @@
+//*********************************************
+//    Framework/Mixins/Content/Common
+//*********************************************
+
+@mixin focus () {
+  // Default
+  outline: thin dotted;
+  // WebKit
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+@mixin unfocus () {
+  outline: none;
+  outline-offset: 0;
+}
+
+$selection-color: #b3d4fc !default;
+$selection-text-shadow: none !default;
+@mixin selection (
+  $color: $selection-color,
+  $text-shadow: $selection-text-shadow,
+  $root: false
+) {
+  $selector: '&';
+  @if ($root == 1 or $root == true) {
+    $selector: '';
+  }
+  $selector: unquote($selector);
+
+  #{$selector}::-moz-selection {
+    background: $color;
+    text-shadow: $text-shadow;
+
+    @content;
+  }
+
+  #{$selector}::selection {
+    background: $color;
+    text-shadow: $text-shadow;
+
+    @content;
+  }
+}
+

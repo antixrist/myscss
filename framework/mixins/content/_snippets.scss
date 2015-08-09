@@ -1,0 +1,191 @@
+//*********************************************
+//    Framework/Mixins/Content/Snippets
+//*********************************************
+
+$opacity-states-normal: .8 !default;
+$opacity-states-hover: 1 !default;
+$opacity-states-active: .5 !default;
+@mixin opacity-states (
+  $normal: $opacity-states-normal,
+  $hover: $opacity-states-hover,
+  $active: $opacity-states-active
+) {
+  opacity: $normal;
+  #{$hovered},
+  #{$focused} {
+    opacity: $hover;
+  }
+  #{$actived} {
+    opacity: $active;
+  }
+}
+
+$opacity-list-child-selector: '> *';
+$opacity-list-opacity: .5 !default;
+$opacity-list-transition: opacity .2s ease-in !default;
+@mixin opacity-list (
+  $child-selector: '> *',
+  $opacity: $opacity-list-opacity,
+  $transition: $opacity-list-transition
+) {
+  $child-selector: unquote($child-selector);
+  #{$child-selector} {
+    @include transition($transition);
+  }
+  #{$hovered} #{$child-selector} {
+    opacity: $opacity;
+    #{$hovered} {
+      opacity: 1;
+    }
+  }
+}
+
+
+$preview-image: '' !default,
+$preview-image-hidpi: '' !default;
+$preview-bg-inline: 1 !default;
+$preview-opacity-normal: 0.8 !default;
+$preview-opacity-hover: 1 !default;
+$preview-opacity-active: 0.7 !default;
+@mixin preview (
+  $image: $preview-image,
+  $image-hidpi: $preview-image-hidpi,
+  $image-inline: $preview-bg-inline,
+  $opacity-normal: $preview-opacity-normal,
+  $opacity-hover: $preview-opacity-hover,
+  $opacity-active: $preview-opacity-active
+) {
+  position: relative;
+  display: inline-block;
+  border: none;
+  text-decoration: none;
+  max-width: 100%;
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    @include icon-opacity-states ($normal: $opacity-normal, $hover: $opacity-hover, $active: $opacity-active);
+
+    @if ($image != "") {
+      @include bg-image($image: $image, $inline: $image-inline);
+
+      @if ($image-hidpi != '') {
+        @if mixin-exists(breakpoint) {
+          @include breakpoint(min-resolution 1.5dppx) {
+
+            @include bg-image($image: $image, $factor: 2, $inline: $image-inline);
+          }
+        }
+      }
+    }
+  }
+}
+
+
+$arrow-block-direction: right !default;
+$arrow-block-arrow-size: 80px !default;
+$arrow-block-bg-color: #FAEA26 !default;
+$arrow-block-padding: 35px !default;
+@mixin arrow-block-arrow (
+  $direction: $arrow-block-direction,
+  $arrow-size: $arrow-block-arrow-size,
+  $color: $arrow-block-bg-color
+) {
+  $direction: unquote($direction);
+
+  padding: 0;
+
+  // horizontal
+  @if ($direction == left or $direction == right) {
+    padding-#{$direction}: $arrow-size;
+
+    &:before,
+    &:after {
+      width: $arrow-size;
+      height: 50%;
+      top: auto;
+      right: auto;
+      bottom: auto;
+      left: auto;
+      #{$direction}: 0;
+    }
+    &:before {
+      top: 0px;
+      background: linear-gradient(to $direction top, $color 50%, transparent 50%);
+    }
+    &:after {
+      top: 50%;
+      background: linear-gradient(to $direction bottom, $color 50%, transparent 50%);
+    }
+  }
+
+  // vertical
+  @if ($direction == top or $direction == bottom) {
+    padding-#{$direction}: $arrow-size;
+
+    &:before,
+    &:after {
+      height: $arrow-size;
+      width: 50%;
+      top: auto;
+      right: auto;
+      bottom: auto;
+      left: auto;
+      #{$direction}: 0;
+    }
+
+    &:before {
+      left: 0px;
+      background: linear-gradient(to left $direction, $color 50%, transparent 50%);
+    }
+
+    &:after {
+      left: 50%;
+      background: linear-gradient(to right $direction, $color 50%, transparent 50%);
+    }
+  }
+
+  .no-cssgradients & {
+    padding: 0;
+  }
+}
+@mixin arrow-block (
+  $direction: $arrow-block-direction,
+  $arrow-size: $arrow-block-arrow-size,
+  $color: $arrow-block-bg-color,
+  $padding: $arrow-block-padding
+) {
+  position: relative;
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+  }
+
+  @include e(content) {
+    padding: $padding;
+    background: $color;
+  }
+
+
+  @if ($direction) {
+    @include arrow-block-arrow($direction: $direction, $arrow-size: $arrow-size, $color: $color);
+  }
+}
+
+
+
+
+
+

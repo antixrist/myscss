@@ -1,0 +1,169 @@
+//*********************************************
+//    Framework/Mixins/Content/Forms/Inputs
+//*********************************************
+@mixin input () {
+  display: inline-block;
+  background-color: #fff;
+  background-image: none;
+  border-style: solid;
+  border-color: transparent;
+  text-align: left;
+  vertical-align: middle;
+
+  #{$focused} {
+//    @include focus();
+  }
+
+  #{$hovered},
+  #{$focused} {
+    text-decoration: none;
+  }
+
+  #{$actived} {
+    outline: 0;
+  }
+
+  #{$disabled} {
+    cursor: default;
+    opacity: .65;
+    box-shadow: none;
+    pointer-events: none;
+  }
+}
+
+$input-height: auto !default;
+$input-font-size: $base-font-size !default;
+$input-line-height: $base-line-height !default;
+$input-border-width: 1px !default;
+$input-padding-vertical: 5px !default;
+$input-padding-horizontal: 10px !default;
+$input-lines: 1 !default;
+$input-min-width: 200px !default;
+@mixin input-size (
+  $height: $input-height,
+  $font-size: $input-font-size,
+  $line-height: $input-line-height,
+  $border-width: $input-border-width,
+  $padding-vertical: $input-padding-vertical,
+  $padding-horizontal: $input-padding-horizontal,
+  $lines: $input-lines,
+  $enlarge-by-ratio: false,
+  $reduce-by-ratio: false,
+  $min-width: $input-min-width
+) {
+  $vertical-sizes: control-get-sizes(
+    $height: $height,
+    $font-size: $font-size,
+    $line-height: $line-height,
+    $border-width: $border-width,
+    $padding-vertical: $padding-vertical,
+    $padding-horizontal: $padding-horizontal,
+    $lines: $lines,
+    $enlarge-by-ratio: false,
+    $reduce-by-ratio: false
+  );
+
+  @include control-sizes(
+    $height: map-get($vertical-sizes, 'height'),
+    $font-size: map-get($vertical-sizes, 'font-size'),
+    $line-height: map-get($vertical-sizes, 'line-height'),
+    $border-width: map-get($vertical-sizes, 'border-width'),
+    $padding-vertical: map-get($vertical-sizes, 'padding-vertical'),
+    $padding-horizontal: map-get($vertical-sizes, 'padding-horizontal')
+  );
+
+  min-width: $min-width;
+}
+
+@mixin input-block {
+  display: block;
+  width: 100%;
+  white-space: normal;
+}
+
+$input-color-normal: $base-color !default;
+$input-color-hover: $input-color-normal !default;
+$input-color-focus: $input-color-normal !default;
+$input-color-active: $input-color-normal !default;
+$input-color-bg-normal: #fff !default;
+$input-color-bg-hover: $input-color-bg-normal !default;
+$input-color-bg-focus: $input-color-bg-normal !default;
+$input-color-bg-active: $input-color-bg-normal !default;
+$input-color-border-normal: #ccc !default;
+$input-color-border-hover: darken($input-color-border-normal, 3) !default;
+$input-color-border-focus: darken($input-color-border-normal, 3) !default;
+$input-color-border-active: darken($input-color-border-hover, 3) !default;
+$input-border-radius: 3px !default;
+@mixin input-variant (
+  $color-normal: $input-color-normal,
+  $color-hover: $input-color-hover,
+  $color-focus: $input-color-focus,
+  $color-active: $input-color-active,
+  $color-bg-normal: $input-color-bg-normal,
+  $color-bg-hover: $input-color-bg-hover,
+  $color-bg-focus: $input-color-bg-focus,
+  $color-bg-active: $input-color-bg-active,
+  $color-border-normal: $input-color-border-normal,
+  $color-border-hover: $input-color-border-hover,
+  $color-border-focus: $input-color-border-focus,
+  $color-border-active: $input-color-border-active,
+  $border-radius: $input-border-radius
+) {
+  color: $color-normal !important;
+  border-color: $color-border-normal;
+  border-radius: $border-radius;
+
+  @include control-background($gradient: $color-bg-normal, $direction: to bottom);
+
+  //  #{$btn-states-focused},
+  #{$hovered} {
+    color: $color-hover !important;
+    border-color: $color-border-hover;
+
+    @include control-background($gradient: $color-bg-hover, $direction: to bottom);
+  }
+
+  #{$focused} {
+    color: $color-focus !important;
+    border-color: $color-border-focus;
+
+    @include control-background($gradient: $color-bg-focus, $direction: to bottom);
+  }
+
+  #{$actived} {
+    color: $color-active !important;
+    border-color: $color-border-active;
+
+    @include control-background($gradient: $color-bg-active, $direction: to bottom);
+  }
+
+  #{$disabled} {
+    &,
+    #{$hovered},
+    #{$focused},
+    #{$actived} {
+      color: $color-normal !important;
+      border-color: $color-border-normal;
+
+      @include control-background($gradient: $color-bg-normal, $direction: to bottom);
+    }
+  }
+}
+
+@mixin input-required () {
+  position: relative;
+  display: inline-block;
+
+  &:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    @content;
+  }
+  #{$text-inputs}, textarea {
+    display: block;
+    width: 100%;
+  }
+}

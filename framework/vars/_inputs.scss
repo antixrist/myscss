@@ -1,0 +1,72 @@
+//*********************************************
+//    Inputs
+//*********************************************
+$input: '.btn' !default;
+$input-block: '#{$input}.btn--block' !default;
+$input-required: '.required' !default;
+
+$input-height: auto !default;
+$input-font-size: $base-font-size !default;
+$input-line-height: $base-line-height !default;
+$input-border-width: 1px !default;
+$input-padding-vertical: 5px !default;
+$input-padding-horizontal: 10px !default;
+$input-lines: 1 !default;
+$input-min-width: 200px !default;
+
+$input-sizes: (
+  default: (
+    selector: '.input-medium',
+    options: (
+      $input-height,
+      $input-font-size,
+      $input-line-height,
+      $input-border-width,
+      $input-padding-vertical,
+      $input-padding-horizontal,
+      $input-lines,
+      $input-min-width
+    )
+  )
+) !default;
+
+
+$input-color-normal: $base-color !default;
+$input-color-hover: $input-color-normal !default;
+$input-color-focus: $input-color-normal !default;
+$input-color-active: $input-color-normal !default;
+$input-color-bg-normal: #fff !default;
+$input-color-bg-hover: $input-color-bg-normal !default;
+$input-color-bg-focus: $input-color-bg-normal !default;
+$input-color-bg-active: $input-color-bg-normal !default;
+$input-color-border-normal: #ccc !default;
+$input-color-border-hover: darken($input-color-border-normal, 3) !default;
+$input-color-border-focus: darken($input-color-border-normal, 3) !default;
+$input-color-border-active: darken($input-color-border-hover, 3) !default;
+$input-border-radius: 3px !default;
+
+$input-variants: (
+  default: (
+    selector: '.input-default',
+    options: (
+      $input-color-normal,
+      $input-color-hover,
+      $input-color-focus,
+      $input-color-active,
+      $input-color-bg-normal,
+      $input-color-bg-hover,
+      $input-color-bg-focus,
+      $input-color-bg-active,
+      $input-color-border-normal,
+      $input-color-border-hover,
+      $input-color-border-focus,
+      $input-color-border-active,
+      $input-border-radius
+    )
+  )
+) !default;
+
+
+
+
+

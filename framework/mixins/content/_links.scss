@@ -1,0 +1,73 @@
+//*********************************************
+//    Framework/Mixins/Content/Links
+//*********************************************
+
+$link-color-normal: #0d44a0 !default;
+$link-color-hover: $link-color-normal !default;
+$link-color-focus: $link-color-normal !default;
+$link-color-active: #ff0000 !default;
+$link-color-visited: $link-color-normal !default;
+$link-border-opacity: 0.7 !default;
+@mixin link (
+  $normal: $link-color-normal,
+  $hover: $link-color-hover,
+  $focus: $link-color-focus,
+  $active: $link-color-active,
+  $visited: $link-color-visited,
+  $border-opacity: $link-border-opacity
+) {
+  @include link-colors($normal, $hover, $active, $visited, $focus);
+
+  cursor: pointer;
+  text-decoration : none;
+  border-bottom : 1px solid;
+
+  $border-normal: $normal;
+  $border-hover: $hover;
+  $border-active: $active;
+  $border-visited: $visited;
+  $border-focus: $focus;
+
+  @if ($border-opacity != 1 and $border-opacity != false) {
+    @include transition(border-color .2s ease-out, color .2s ease-out, text-shadow .2s ease-out);
+    $border-normal: rgba($normal, $border-opacity);
+    $border-hover: $normal;
+  }
+
+  border-color: $border-normal;
+
+  #{$hovered} {
+    color: $hover;
+    border-color: $border-hover;
+    text-shadow: 0 1px 0 transparent;
+
+    #{$focused} {
+      color: $hover;
+      border-color: $border-hover;
+      text-shadow: 0 1px 0 transparent;
+    }
+  }
+  #{$actived} {
+    color: $active;
+    border-color: $border-active;
+    text-shadow: 0 1px 0 transparent;
+    // &:hover {
+    //  border-color: $normal-color;
+    // }
+  }
+  #{$focused} {
+    color: $focus;
+    border-color: $border-focus;
+    text-shadow: 0 1px 0 transparent;
+  }
+
+  .no-rgba & {
+    border: none;
+    text-decoration: underline;
+  }
+};
+
+@mixin link-pseudo () {
+  border-bottom-style: dashed;
+}
+

@@ -1,0 +1,186 @@
+//*********************************************
+//    Content/Forms Helpers
+//*********************************************
+
+
+@mixin control-background($color, $direction: bottom, $fallback: true) {
+  @if (type-of($color) == color) {
+    background: $color;
+  }
+  @elseif (type-of($color) == list) {
+    @if (type-of($fallback) != false) {
+      @if (type-of($fallback) != color) {
+        // calc fallback color
+        $color-start: nth(nth($color, 1), 1);
+        @if (type-of($color-start) == list) { $color-start: nth($color-start, 1); }
+
+        $color-stop: nth(nth($color, length($color)), 1);
+        @if (type-of($color-stop) == list) { $color-start: nth($color-stop, 1); }
+
+        $fallback: mix($color-start, $color-stop, $weight: 50%);
+      }
+
+      background: $fallback;
+    }
+
+    @if (type-of($direction) != number and str-index(#{$direction}, unquote('to ')) != 1) {
+      $direction: to $direction;
+    }
+
+    @include background-image(linear-gradient($direction, $color));
+  }
+}
+
+
+@function control-fit-to-height (
+  $height,
+  $font-size,
+  $line-height,
+  $border-width,
+  $padding-vertical,
+  $padding-horizontal,
+  $enlarge-by-ratio: false,
+  $reduce-by-ratio: false
+) {
+  $result: (
+    height: $height,
+    font-size: $font-size,
+    line-height: $line-height,
+    padding-vertical: $padding-vertical,
+    padding-horizontal: $padding-horizontal,
+    border-width: $border-width
+  );
+
+  $borders-height-px: dimentions-sum($unit: px, $dimentions: $border-width, $font-size: $font-size, $dir: vertical);
+  $paddings-height-px: dimentions-sum($unit: px, $dimentions: $padding-vertical, $font-size: $font-size, $dir: vertical);
+  $line-height-px: to-unit($unit: px, $value: $line-height, $font-size: $font-size);
+  $row-height-px: $line-height-px;
+
+  $needed-height-px: to-unit($unit: px, $value: $height, $font-size: $font-size);
+  $needed-inner-height-px: $needed-height-px - $borders-height-px;
+  $inner-height-px: $row-height-px + $paddings-height-px;
+  $ratio: $needed-inner-height-px / $inner-height-px;
+
+  // если необходимая внутренняя высота больше исходной внутренней высоты
+  @if ($needed-inner-height-px > $inner-height-px) {
+    // если нужно увеличивать параметры пропорционально
+    @if ($enlarge-by-ratio == true or $enlarge-by-ratio == 1) {
+      // то пропорционально увеличим $font-size и padding'и
+      $result: map-merge($result, (
+        font-size: $font-size * $ratio,
+        padding-vertical: $padding-vertical * $ratio,
+        padding-horizontal: $padding-horizontal * $ratio
+      ));
+    } @else {
+      // то просто подгоним вертикальные padding'и
+      $new-padding-vertical: ($needed-inner-height-px - $inner-height-px) /2;
+      // и пропорционально вертикальным изменим горизонтальные
+      $padding-ratio: $new-padding-vertical / $padding-vertical;
+      $new-padding-horizontal: $padding-horizontal * $padding-ratio;
+      $result: map-merge($result, (
+        padding-vertical: $new-padding-vertical,
+        padding-horizontal: $new-padding-horizontal
+      ));
+    }
+  } @elseif ($needed-inner-height-px < $inner-height-px) {
+    @if ($reduce-by-ratio == true or $reduce-by-ratio == 1) {
+      // то пропорционально уменьшим $font-size и padding'и
+      $result: map-merge($result, (
+        font-size: $font-size * $ratio,
+        padding-vertical: $padding-vertical * $ratio,
+        padding-horizontal: $padding-horizontal * $ratio
+      ));
+    } @else {
+      $result: map-merge($result, (padding-vertical: 0));
+    }
+  }
+
+  @return $result;
+}
+
+@function control-calc-auto-height (
+  $font-size,
+  $line-height,
+  $border-width,
+  $padding-vertical,
+  $padding-horizontal,
+  $lines: 1
+) {
+  @if (type-of($lines) != number or $lines <= 0) {
+    $lines: 1;
+  }
+
+  $line-height-px: to-unit($unit: px, $value: $line-height, $font-size: $font-size);
+  $rows-height-px: $line-height-px * $lines;
+
+  $borders-height-px: dimentions-sum($unit: px, $dimentions: $border-width, $font-size: $font-size, $dir: vertical);
+  $paddings-height-px: dimentions-sum($unit: px, $dimentions: $padding-vertical, $font-size: $font-size, $dir: vertical);
+  $height: $rows-height-px + $paddings-height-px + $borders-height-px;
+  //  $height: to-unit($unit, $value: $height, $font-size: $font-size);
+
+  @return (height: $height);
+}
+
+@function control-get-sizes (
+  $font-size,
+  $line-height,
+  $border-width,
+  $padding-vertical,
+  $padding-horizontal,
+  $height: auto,
+  $lines: 1,
+  $enlarge-by-ratio: false,
+  $reduce-by-ratio: false
+) {
+  $result: (
+    height: $height,
+    font-size: $font-size,
+    line-height: $line-height,
+    border-width: $border-width,
+    padding-vertical: $padding-vertical,
+    padding-horizontal: $padding-horizontal
+  );
+
+  @if (type-of($height) == number and $height != 0) {
+    // нужно подогнать под высоту
+    $result: map-merge($result, control-fit-to-height(
+      $height,
+      $font-size,
+      $line-height,
+      $border-width,
+      $padding-vertical,
+      $padding-horizontal,
+      $enlarge-by-ratio: false,
+      $reduce-by-ratio: false
+    ));
+  } @else {
+    // высоту нужно подсчитать
+    $result: map-merge($result, control-calc-auto-height(
+      $font-size: $font-size,
+      $line-height: $line-height,
+      $border-width: $border-width,
+      $padding-vertical: $padding-vertical,
+      $padding-horizontal: $padding-horizontal,
+      $lines: $lines
+    ));
+  }
+
+  @return $result;
+}
+
+
+@mixin control-sizes (
+  $height,
+  $font-size,
+  $line-height,
+  $padding-vertical,
+  $padding-horizontal,
+  $border-width
+) {
+  font-size: $font-size;
+  line-height: $line-height;
+  padding: $padding-vertical $padding-horizontal;
+  border-width: $border-width;
+  height: $height;
+}
+

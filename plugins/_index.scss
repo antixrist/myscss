@@ -1,0 +1,26 @@
+@import '../framework/mixins/_index';
+@import '_vars';
+
+@if (is-true($plugins-need-fancybox) == true) {
+  @import 'fancybox/_index';
+}
+
+@if (is-true($plugins-need-magnific-popup) == true) {
+  @import 'jquery.magnific-popup/_index';
+}
+
+@if (is-true($plugins-need-bootstrap-tabs) == true) {
+  @import 'jquery.bootstrap-tabs/_index';
+}
+
+@if (is-true($plugins-need-afl) == true) {
+  @import 'jquery.ajax.form.loader/_index';
+}
+
+@if (is-true($plugins-need-fotorama) == true) {
+  @import 'fotorama/_index';
+}
+
+@if (is-true($plugins-need-slick) == true) {
+  @import 'slick/_index';
+}

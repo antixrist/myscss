@@ -1,0 +1,33 @@
+* {
+  box-sizing: border-box;
+}
+
+@if ($layout-width != '' and $layout-width != false) {
+  #{$layout-width} {
+    @include layout-width(
+      $min-width: $layout-width-min,
+      $max-width: $layout-width-max,
+      $side-space: $layout-width-side-space,
+      $side-space-type: $layout-width-side-space-type
+    );
+  }
+}
+
+@include sticky-footer (
+  $height: $layout-sticky-footer-height,
+  $selector-container: $layout-sticky-footer-selector-container,
+  $selector-content: $layout-sticky-footer-selector-content,
+  $selector-footer: $layout-sticky-footer-selector-footer
+);
+
+@include carcass (
+  $content-container-selector: $layout-content-container-selector,
+  $content-selector: $layout-content-selector,
+  $sidebar-left-selector: $layout-sidebar-left-selector,
+  $sidebar-left-width: $layout-sidebar-left-width,
+  $sidebar-left-gutter: $layout-sidebar-left-gutter,
+  $sidebar-right-selector: $layout-sidebar-right-selector,
+  $sidebar-right-width: $layout-sidebar-right-width,
+  $sidebar-right-gutter: $layout-sidebar-right-gutter
+);
+

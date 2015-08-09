@@ -1,0 +1,104 @@
+$link-color-normal: #0d44a0 !default;
+$link-color-hover: $link-color-normal !default;
+$link-color-focus: $link-color-normal !default;
+$link-color-active: #ff0000 !default;
+$link-color-visited: $link-color-normal !default;
+$link-border-opacity: 0.7 !default;
+
+$lists-padding: 40px !default;
+
+img {
+  border: 0;
+  max-width: 100%;
+  height: auto;
+}
+
+dd {
+  margin-left: $lists-padding;
+}
+menu, ol, ul {
+  padding-left: $lists-padding;
+}
+
+.unlist {
+  @include no-bullets();
+  padding: 0 !important;
+  margin: 0 !important;
+  background: none !important;
+  li {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: none !important;
+  }
+}
+
+b, strong, .strong, .bold {
+  font-weight: 600;
+}
+
+.pull-left {
+  float: left;
+}
+.pull-right {
+  float: right;
+}
+
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+
+.v-center-table {
+  display: table;
+  width: 100%;
+}
+.v-center-cell {
+  display: table-cell;
+  margin-top: inherit;
+  vertical-align: middle;
+  width: 100%;
+}
+
+.block {
+  display: block;
+}
+.block-center {
+  display: block;
+  margin-left   : auto;
+  margin-right  : auto;
+}
+
+
+* > *:first-child {
+  margin-top: 0;
+}
+* > *:last-child {
+  margin-bottom: 0;
+}
+
+a, .link {
+  @include link(
+    $normal: $link-color-normal,
+    $hover: $link-color-hover,
+    $focus: $link-color-focus,
+    $active: $link-color-active,
+    $visited: $link-color-visited,
+    $border-opacity: $link-border-opacity
+  );
+
+  &.no-border {
+    @include no-border();
+  }
+  &.pseudo,
+  &.link--pseudo {
+    @include link-pseudo();
+  }
+  .logo &, &.logo {
+    @include no-border($important: true);
+  }
+}

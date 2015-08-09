@@ -1,0 +1,69 @@
+//*********************************************
+//    Buttons
+//*********************************************
+$btn: '.btn' !default;
+$btn-block: '#{$btn}.btn--block' !default;
+$btn-file: '#{$btn}.btn--file' !default;
+
+$btn-height: auto !default;
+$btn-font-size: $base-font-size !default;
+$btn-line-height: $base-line-height !default;
+$btn-border-width: 1px !default;
+$btn-padding-vertical: 10px !default;
+$btn-padding-horizontal: 65px !default;
+$btn-lines: 1 !default;
+$btn-active-offset: 1px !default;
+$btn-active-offset-type: inner !default; // inner|outer|none/false
+
+$btn-sizes: (
+  default: (
+    selector: '.btn-medium',
+    options: (
+      $btn-height,
+      $btn-font-size,
+      $btn-line-height,
+      $btn-border-width,
+      $btn-padding-vertical,
+      $btn-padding-horizontal,
+      $btn-lines,
+      $btn-active-offset,
+      $btn-active-offset-type
+    )
+  )
+) !default;
+
+
+$btn-color-normal: #fff !default;
+$btn-color-hover: $btn-color-normal !default;
+$btn-color-focus: $btn-color-normal !default;
+$btn-color-active: $btn-color-normal !default;
+$btn-color-bg-normal: (#ffd15c, #ffd15c, #fdc636, #fdc636, #fcb809, #fe6b03) !default;
+$btn-color-bg-hover: (#feea5c, #fdd936, #fdca09, #fdca09, #fd8905, #ffba04) !default;
+$btn-color-bg-focus: $btn-color-bg-hover !default;
+$btn-color-bg-active: (#fe9457, #fe9457, #fe7f31, #fe7f31, #fe6403, #fcb008) !default;
+$btn-color-border-normal: transparent !default;
+$btn-color-border-hover: transparent !default;
+$btn-color-border-focus: transparent !default;
+$btn-color-border-active: transparent !default;
+$btn-border-radius: 4px !default;
+
+$btn-variants: (
+  medium: (
+    selector: '.btn-default',
+    options: (
+      $btn-color-normal,
+      $btn-color-hover,
+      $btn-color-focus,
+      $btn-color-active,
+      $btn-color-bg-normal,
+      $btn-color-bg-hover,
+      $btn-color-bg-focus,
+      $btn-color-bg-active,
+      $btn-color-border-normal,
+      $btn-color-border-hover,
+      $btn-color-border-focus,
+      $btn-color-border-active,
+      $btn-border-radius
+    )
+  )
+) !default;

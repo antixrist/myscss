@@ -1,0 +1,147 @@
+//*********************************************
+//    Common
+//*********************************************
+
+
+@import '_vars';
+@import '_relative-units';
+
+@mixin e($names...) {
+  @if length($names) {
+    @for $i from 1 through length($names) {
+      @at-root &__#{nth($names, $i)} {
+        @content;
+      }
+    }
+  }
+}
+@mixin m($names...) {
+  @if length($names) {
+    @for $i from 1 through length($names) {
+      @at-root &--#{nth($names, $i)} {
+        @content;
+      }
+    }
+  }
+}
+
+
+@function implode($glue, $list) {
+  $result: '';
+  @each $item in $list {
+    $result: '#{$result}#{$glue}#{inspect($item)}';
+  }
+
+  @return $result;
+}
+
+
+@function explode($glue, $string, $separator: comma) {
+  @if (type-of($string) != string) {
+    $string: inspect($string);
+    @warn('[explode] Not a string! $string: "#{$string}"');
+  }
+  $string: unquote($string);
+
+  @if (type-of($glue) != string) {
+    $glue: inspect($glue);
+    @warn('[explode] Not a string! $glue: "#{$glue}"');
+  }
+  $glue: unquote($glue);
+
+  $separator: unquote($separator);
+  @if ($separator == ',') {
+    $separator: comma;
+  } @elseif ($separator == ' ') {
+    $separator: space;
+  } @elseif ($separator != auto and $separator != comma and $separator != space) {
+    $separator: auto;
+    @warn('[to-list] Unknown separator! $separator: "#{$separator}"');
+  }
+
+  $result: ();
+  $index: str-index($string, '/');
+  @while ($index != null) {
+    $item: str-slice($string, 1, $index - 1);
+    @if ($item != '') {
+      $list: append($result, $item, $separator);
+    }
+    $string: str-slice($string, $index + 1);
+    $index: str-index($string, '/');
+    @if ($index == null and $string != '') {
+      $list: append($result, $string, $separator);
+    }
+  }
+
+  @return $result;
+}
+
+
+@function to-list($string, $separator: ' ') {
+  $list: explode($separator, $string, $separator: space);
+
+  @return $list;
+}
+
+
+@function str-replace($string, $search, $replace: '') {
+  $index: str-index($string, $search);
+
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+
+  @return $string;
+}
+
+
+@function join-pathes ($pathes...) {
+  $result: implode('/', $pathes);
+  $result: str_replace($result, '//', '/');
+  $result: str_replace($result, '//', '/');
+
+  @return $result;
+}
+
+
+@mixin no-border ($important: false) {
+  $imp: '';
+  @if ($important == true or $important == 1) {
+    $imp: '!important';
+  }
+
+  $imp: unquote($imp);
+
+  border: none $imp;
+  outline: none $imp;
+  text-decoration: none $imp;
+}
+
+
+@function is-true ($input) {
+  $result: false;
+  @if ($input == true or $input == 1) {
+    $result: true;
+  }
+
+  @return $result;
+}
+
+
+@function map-append ($map, $append) {
+  @if ((type-of($map) == list and length($map) == 0) or type-of($map) == map) {
+
+  } @else {
+    $map: ();
+    @warn('[map-append] $map is not a valid map type! $map: #{inspect($map)}');
+  }
+
+  @if (type-of($append) != map) {
+    $append: ();
+    @warn('[map-append] $append is not a valid map type!');
+  }
+
+  @return map-merge($map, $append);
+}
+
+

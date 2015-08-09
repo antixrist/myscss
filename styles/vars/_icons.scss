@@ -1,0 +1,10 @@
+$icon-base: '.icon' !default;
+
+$sprite-icons: (
+  base: (
+    'selector-prefix': '.icon--',
+    'map': 'icons/',
+    'base': false,
+    'sizes-factor': 1
+  )
+) !default;

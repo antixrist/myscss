@@ -1,0 +1,150 @@
+//*********************************************
+//    Framework/Mixins/Content/Side positions
+//*********************************************
+
+@mixin side-position-outer (
+  $position,
+  $width: 0,
+  $height: 0,
+  $offset-x: 0,
+  $offset-y: 0
+) {
+  $position: to-list($position);
+
+  @if (length($position) != 2) {
+    @warn('[to-outer-side] Invalid position! $position: #{$position}');
+  } @else {
+    $vertical: unquote(nth($position, 1));
+    $horizontal: unquote(nth($position, 2));
+    @if ($horizontal == center and $vertical == center) {
+      @warn('[to-outer-side] Invalid position! Outer side cann\'t be a "center center".');
+    } @else {
+      $is-error: false;
+      @if ($vertical != top and $vertical != bottom and $vertical != center) {
+        @warn('[to-outer-side] Invalid position! Outer vertical side should be a "top", "bottom" or "center".');
+        $is-error: true;
+      }
+      @if ($horizontal != left and $horizontal != right and $horizontal != center) {
+        @warn('[to-outer-side] Invalid position! Outer horizontal side should be a "left", "right" or "center".');
+        $is-error: true;
+      }
+
+      @if (type-of($width) != number or $width < 0) {
+        $width: 0;
+      }
+      @if (type-of($height) != number or $height < 0) {
+        $height: 0;
+      }
+      @if (type-of($offset-x) != number or $offset-x < 0) {
+        $offset-x: 0;
+      }
+      @if (type-of($offset-y) != number or $offset-y < 0) {
+        $offset-y: 0;
+      }
+
+      @if ($is-error != true) {
+        $margin-top: $offset-y;
+        $margin-left: $offset-x;
+
+        position: absolute;
+        @if ($horizontal == left) {
+          right: 100%;
+          left: auto;
+        } @elseif ($horizontal == right) {
+          left: 100%;
+          right: auto;
+        } @elseif ($horizontal == center) {
+          left: 50%;
+          right: auto;
+          $margin-left: -($width /2) + $margin-left;
+        }
+        margin-left: $margin-left;
+
+        @if ($vertical == top) {
+          bottom: 100%;
+          top: auto;
+        } @elseif ($vertical == bottom) {
+          top: 100%;
+          bottom: auto;
+        } @elseif ($vertical == center) {
+          top: 50%;
+          bottom: auto;
+          $margin-top: -($height /2) + $margin-left;
+        }
+        margin-top: $margin-top;
+      }
+    }
+  }
+}
+
+@mixin side-position-inner (
+  $position,
+  $width: 0,
+  $height: 0,
+  $offset-x: 0,
+  $offset-y: 0
+) {
+  $position: to-list($position);
+
+  @if (length($position) != 2) {
+    @warn('[to-inner-side] Invalid position! $position: #{$position}');
+  } @else {
+    $vertical: unquote(nth($position, 1));
+    $horizontal: unquote(nth($position, 2));
+    $is-error: false;
+    @if ($vertical != top and $vertical != bottom and $vertical != center) {
+      @warn('[to-inner-side] Invalid position! Inner vertical side should be a "top", "bottom" or "center".');
+      $is-error: true;
+    }
+    @if ($horizontal != left and $horizontal != right and $horizontal != center) {
+      @warn('[to-inner-side] Invalid position! Inner horizontal side should be a "left", "right" or "center".');
+      $is-error: true;
+    }
+
+    @if (type-of($width) != number or $width < 0) {
+      $width: 0;
+    }
+    @if (type-of($height) != number or $height < 0) {
+      $height: 0;
+    }
+    @if (type-of($offset-x) != number or $offset-x < 0) {
+      $offset-x: 0;
+    }
+    @if (type-of($offset-y) != number or $offset-y < 0) {
+      $offset-y: 0;
+    }
+
+    @if ($is-error != true) {
+      $margin-top: $offset-y;
+      $margin-left: $offset-x;
+
+      position: absolute;
+      @if ($horizontal == left) {
+        left: 0;
+        right: auto;
+      } @elseif ($horizontal == right) {
+        right: 0;
+        left: auto;
+      } @elseif ($horizontal == center) {
+        left: 50%;
+        right: auto;
+        $margin-left: -($width /2) + $margin-left;
+      }
+      margin-left: $margin-left;
+
+      @if ($vertical == top) {
+        top: 0;
+        bottom: auto;
+      } @elseif ($vertical == bottom) {
+        bottom: 0;
+        top: auto;
+      } @elseif ($vertical == center) {
+        top: 50%;
+        bottom: auto;
+        $margin-top: -($height /2) + $margin-left;
+      }
+      margin-top: $margin-top;
+    }
+  }
+}
+

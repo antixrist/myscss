@@ -1,0 +1,48 @@
+@if ($btn != '' and $btn != false) {
+  #{$btn} {
+    @include btn();
+
+    @include e(inner) {
+      display: inline-block;
+      max-width: 100%;
+      overflow: hidden;
+      vertical-align: baseline;
+    }
+  }
+}
+
+@if ($btn-block != '' and $btn-block != false) {
+  #{$btn-block} {
+    @include btn-block;
+  }
+}
+
+@if ($btn-file != '' and $btn-file != false) {
+  #{$btn-file} {
+    @include btn-file;
+  }
+}
+
+@if (type-of($btn-sizes) == map) {
+  @each $type, $parameters in $btn-sizes {
+    @if (type-of($parameters) == map and map-has-key($parameters, 'selector') and map-has-key($parameters, 'options')) {
+      #{map-get($parameters, 'selector')} {
+        $options: map-get($parameters, 'options');
+        @include btn-size($options...);
+      }
+    }
+  }
+}
+
+@if (type-of($btn-variants) == map) {
+  @each $type, $parameters in $btn-variants {
+    @if (type-of($parameters) == map and map-has-key($parameters, 'selector') and map-has-key($parameters, 'options')) {
+      #{map-get($parameters, 'selector')} {
+        $options: map-get($parameters, 'options');
+        @include btn-variant($options...);
+      }
+    }
+  }
+}
+
+

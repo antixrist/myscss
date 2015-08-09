@@ -1,0 +1,70 @@
+.form {
+  @include e(title) {
+
+  }
+
+  @include e(intro) {
+
+  }
+
+  @include e(message) {
+
+    &:empty {
+      display: none;
+    }
+
+    &.error,
+    .error & {
+      color: $validated-error-color;
+    }
+
+    .success &,
+    &.success {
+      font-size: 16px;
+      color: $validated-success-color;
+    }
+  }
+
+  @include e(group) {
+
+    &.error,
+    .error & {
+      color: $validated-error-color;
+    }
+
+    @include e(label) {
+      &.error,
+      .error & {
+        color: $validated-error-color;
+      }
+
+      .success &,
+      &.success {
+//      color: $validated-success-color;
+      }
+    }
+
+    @include e(message) {
+
+      &:empty {
+        display: none;
+      }
+
+      &.error,
+      .error & {
+        color: $validated-error-color;
+      }
+
+      .success &,
+      &.success {
+        color: $validated-success-color;
+      }
+    }
+
+  }
+
+  @include e(outro) {
+
+  }
+}
+

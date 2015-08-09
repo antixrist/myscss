@@ -1,0 +1,50 @@
+@if ($input != '' and $input != false) {
+  #{$input} {
+    @include input();
+
+    #{$validated-error} {
+      border-color: $validated-error-color;
+    }
+    #{$validated-success} {
+
+    }
+  }
+}
+
+@if ($input-block != '' and $input-block != false) {
+  #{$input-block} {
+    @include input-block;
+  }
+}
+
+@if ($input-required != '' and $input-required != false) {
+  #{$input-required} {
+    @include input-required() {
+
+    };
+  }
+}
+
+@if (type-of($input-sizes) == map) {
+  @each $type, $parameters in $input-sizes {
+    @if (type-of($parameters) == map and map-has-key($parameters, 'selector') and map-has-key($parameters, 'options')) {
+      #{map-get($parameters, 'selector')} {
+        $options: map-get($parameters, 'options');
+        @include input-size($options...);
+      }
+    }
+  }
+}
+
+@if (type-of($input-variants) == map) {
+  @each $type, $parameters in $input-variants {
+    @if (type-of($parameters) == map and map-has-key($parameters, 'selector') and map-has-key($parameters, 'options')) {
+      #{map-get($parameters, 'selector')} {
+        $options: map-get($parameters, 'options');
+        @include input-variant($options...);
+      }
+    }
+  }
+}
+
+

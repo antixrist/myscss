@@ -1,0 +1,174 @@
+//*********************************************
+//    Framework/Mixins/Layout/Carcass
+//*********************************************
+
+/*/
+  <div class="layout"> <!-- ".layout" - here is mixin's context -->
+    <div #{$content-container-selector} role="main">
+      <main #{$content-selector} role="main">
+        <!-- content here -->
+      </main>
+    </div>
+    <aside #{$sidebar-left-selector}>
+      <!-- sidebar left here -->
+    </aside>
+    <aside #{$sidebar-right-selector}>
+      <!-- sidebar right here -->
+    </aside>
+  </div>
+/*/
+$layout-content-container-selector: '.layout-content-container' !default;
+$layout-content-selector: '.layout-content' !default;
+$layout-sidebar-left-selector: '.layout-sidebar-left' !default;
+$layout-sidebar-left-width: 0 !default;
+$layout-sidebar-left-gutter: 0 !default;
+$layout-sidebar-right-selector: '.layout-sidebar-right' !default;
+$layout-sidebar-right-width: 0 !default;
+$layout-sidebar-right-gutter: 0 !default;
+@mixin carcass (
+  $content-container-selector: $layout-content-container-selector,
+  $content-selector: $layout-content-selector,
+  $sidebar-left-selector: $layout-sidebar-left-selector,
+  $sidebar-left-width: $layout-sidebar-left-width,
+  $sidebar-left-gutter: $layout-sidebar-left-gutter,
+  $sidebar-right-selector: $layout-sidebar-right-selector,
+  $sidebar-right-width: $layout-sidebar-right-width,
+  $sidebar-right-gutter: $layout-sidebar-right-gutter
+) {
+  @include clearfix;
+
+  @if (
+    ($sidebar-left-selector != '' and type-of($sidebar-left-width) == number and $sidebar-left-width > 0) or
+    ($sidebar-right-selector != '' and type-of($sidebar-right-width) == number and $sidebar-right-width > 0)
+  ) {
+    $content-padding-left: 0;
+    $content-padding-right: 0;
+
+    @if ($sidebar-left-width > 0) {
+      @if (type-of($sidebar-left-gutter) != number) {
+        $sidebar-left-gutter: 0;
+      }
+      $content-padding-left: $sidebar-left-width + $sidebar-left-gutter;
+
+      #{$sidebar-left-selector} {
+        float: left;
+        margin-left: -100%;
+        position: relative;
+        width: $sidebar-left-width;
+      }
+    }
+
+    @if ($sidebar-right-width > 0) {
+      @if (type-of($sidebar-right-gutter) != number) {
+        $sidebar-right-gutter: 0;
+      }
+      $content-padding-right: $sidebar-right-width + $sidebar-right-gutter;
+
+      #{$sidebar-right-selector} {
+        float: left;
+        margin-left: -$sidebar-right-width;
+        position: relative;
+        width: $sidebar-right-width;
+      }
+    }
+
+    #{$content-container-selector} {
+      float: left;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    #{$content-selector} {
+      padding-right: $content-padding-right;
+      padding-left: $content-padding-left;
+    }
+  }
+}
+
+
+/*/
+  <body>
+    <div #{$selector-container}>
+      <div #{$selector-content}>
+        <!-- content here -->
+      </div>
+    </div>
+    <footer #{$selector-footer}>
+      <!-- footer here -->
+    </footer>
+  </body>
+/*/
+$layout-sticky-footer-height: 100px !default;
+$layout-sticky-footer-selector-container: '.layout' !default;
+$layout-sticky-footer-selector-content: '.layout-middle' !default;
+$layout-sticky-footer-selector-footer: '.layout-footer' !default;
+@mixin sticky-footer (
+  $height: $layout-sticky-footer-height,
+  $selector-container: $layout-sticky-footer-selector-container,
+  $selector-content: $layout-sticky-footer-selector-content,
+  $selector-footer: $layout-sticky-footer-selector-footer
+) {
+  @if (type-of($height) == number and $height > 0) {
+    html, body {
+      height: 100%;
+    }
+
+    #{unquote($selector-container)} {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      height: auto !important;
+      height: 100%;
+    }
+
+    #{unquote($selector-content)} {
+      padding-bottom: $height;
+    }
+
+    #{unquote($selector-footer)} {
+      margin-top: -$height;
+      height: $height;
+      position: relative;
+      overflow: hidden;
+    }
+  }
+}
+
+$layout-width-min: 960px !default;
+$layout-width-max: 1200px !default;
+$layout-width-side-space: 50px !default;
+$layout-width-side-space-type: padding !default; // or "margin"
+@mixin layout-width (
+  $min-width: $layout-width-min,
+  $max-width: $layout-width-max,
+  $side-space: $layout-width-side-space,
+  $side-space-type: $layout-width-side-space-type
+) {
+  @if (
+    (type-of($min-width) == number and $min-width > 0) or
+    (type-of($max-width) == number and $max-width > 0)
+  ) {
+    margin-left: auto;
+    margin-right: auto;
+
+    @if ($min-width > 0) {
+      min-width: $min-width + $side-space*2;
+    }
+    @if ($max-width > 0) {
+      max-width: $max-width + $side-space*2;
+    }
+
+    @if (type-of($side-space) == number and $side-space > 0) {
+      $side-space-type: unquote($side-space-type);
+      @if ($side-space-type != padding) {
+        $side-space-type: margin;
+      }
+
+      #{$side-space-type}-left: $side-space;
+      #{$side-space-type}-right: $side-space;
+    }
+  }
+}
+
+
+
